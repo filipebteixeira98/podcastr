@@ -1,16 +1,38 @@
+import { useContext } from 'react'
+import Image from 'next/image'
+
+import { PlayerContext } from '../../contexts/PlayerContext'
+
 import styles from './styles.module.scss'
 
 export function Player() {
+  const { episodeList, currentEpisodeIndex } = useContext(PlayerContext)
+
+  const episode = episodeList[currentEpisodeIndex]
+
   return (
     <div className={styles.playerContainer}>
       <header>
-        <img src="/playing.svg" alt="Playing now"/>
+        <img src="/playing.svg" alt="Playing now" />
         <strong>Playing now</strong>
       </header>
-      <div className={styles.emptyPlayer}>
-        <strong>Choose one podcast to hear</strong>
-      </div>
-      <footer className={styles.empty}>
+      {episode ? (
+        <div className={styles.currentEpisode}>
+          <Image
+            width={592}
+            height={592}
+            src={episode.thumbnail}
+            objectFit="cover"
+          />
+          <strong>{episode.title}</strong>
+          <span>{episode.members}</span>
+        </div>
+      ) : (
+        <div className={styles.emptyPlayer}>
+          <strong>Choose one podcast to hear</strong>
+        </div>
+      )}
+      <footer className={!episode ? styles.empty : ''}>
         <div className={styles.progress}>
           <span>00:00</span>
           <div className={styles.slider}>
@@ -20,19 +42,19 @@ export function Player() {
         </div>
         <div className={styles.buttons}>
           <button type="button">
-            <img src="/shuffle.svg" alt="Shuffle"/>
+            <img src="/shuffle.svg" alt="Shuffle" />
           </button>
           <button type="button">
-            <img src="/play-previous.svg" alt="Play previous"/>
+            <img src="/play-previous.svg" alt="Play previous" />
           </button>
           <button type="button" className={styles.playButton}>
-            <img src="/play.svg" alt="Play"/>
+            <img src="/play.svg" alt="Play" />
           </button>
           <button type="button">
-            <img src="/play-next.svg" alt="Play next"/>
+            <img src="/play-next.svg" alt="Play next" />
           </button>
           <button type="button">
-            <img src="/repeat.svg" alt="Repeat"/>
+            <img src="/repeat.svg" alt="Repeat" />
           </button>
         </div>
       </footer>

@@ -9,7 +9,8 @@ import { PlayerContext } from '../../contexts/PlayerContext'
 import styles from './styles.module.scss'
 
 export function Player() {
-  const { episodeList, currentEpisodeIndex } = useContext(PlayerContext)
+  const { episodeList, currentEpisodeIndex, isPlaying } =
+    useContext(PlayerContext)
 
   const episode = episodeList[currentEpisodeIndex]
 
@@ -64,7 +65,11 @@ export function Player() {
             className={styles.playButton}
             disabled={!episode}
           >
-            <img src="/play.svg" alt="Play" />
+            {isPlaying ? (
+              <img src="/pause.svg" alt="Play" />
+            ) : (
+              <img src="/play.svg" alt="Play" />
+            )}
           </button>
           <button type="button" disabled={!episode}>
             <img src="/play-next.svg" alt="Play next" />

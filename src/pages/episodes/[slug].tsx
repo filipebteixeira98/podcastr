@@ -2,6 +2,7 @@ import { GetStaticProps, GetStaticPaths } from 'next'
 // import { useRouter } from 'next/router'
 import Link from 'next/link'
 import Image from 'next/image'
+import Head from 'next/head'
 import { format, parseISO } from 'date-fns'
 import enUS from 'date-fns/locale/en-US'
 
@@ -40,6 +41,9 @@ export default function Episode({ episode }: EpisodeProps) {
 
   return (
     <div className={styles.episode}>
+      <Head>
+        <title>{episode.title} | Podcastr</title>
+      </Head>
       <div className={styles.thumbnailContainer}>
         <Link href="/">
           <button type="button">

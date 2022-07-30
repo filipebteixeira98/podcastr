@@ -5,6 +5,8 @@ import Image from 'next/image'
 import { format, parseISO } from 'date-fns'
 import enUS from 'date-fns/locale/en-US'
 
+import { usePlayer } from '../../contexts/PlayerContext'
+
 import { api } from '../../services/api'
 
 import { convertDurationToTimeString } from '../../utils/convertDurationToTimeString'
@@ -33,13 +35,15 @@ export default function Episode({ episode }: EpisodeProps) {
   //   return <p>Loading...</p>
   // }
   // return <h1>{router.query.slug}</h1>
-  
+
+  const { play } = usePlayer()
+
   return (
     <div className={styles.episode}>
       <div className={styles.thumbnailContainer}>
         <Link href="/">
           <button type="button">
-            <img src="/arrow-left.svg" alt="Go back"/>
+            <img src="/arrow-left.svg" alt="Go back" />
           </button>
         </Link>
         <Image
@@ -48,8 +52,8 @@ export default function Episode({ episode }: EpisodeProps) {
           src={episode.thumbnail}
           objectFit="cover"
         />
-        <button type="button">
-          <img src="/play.svg" alt="Play episode"/>
+        <button type="button" onClick={() => play(episode)}>
+          <img src="/play.svg" alt="Play episode" />
         </button>
       </div>
       <header>
@@ -58,7 +62,10 @@ export default function Episode({ episode }: EpisodeProps) {
         <span>{episode.publishedAt}</span>
         <span>{episode.durationAsString}</span>
       </header>
-      <div className={styles.description} dangerouslySetInnerHTML={{ __html: episode.description }} />
+      <div
+        className={styles.description}
+        dangerouslySetInnerHTML={{ __html: episode.description }}
+      />
     </div>
   )
 }
@@ -72,14 +79,14 @@ export const getStaticPaths: GetStaticPaths = async () => {
     },
   })
 
-  const paths = data.map(episode => {
+  const paths = data.map((episode) => {
     return {
       params: {
         slug: episode.id,
       },
     }
   })
-  
+
   return {
     paths,
     fallback: 'blocking',
@@ -94,13 +101,15 @@ export const getStaticProps: GetStaticProps = async (ctx) => {
     title: data.title,
     thumbnail: data.thumbnail,
     members: data.members,
-    publishedAt: format(parseISO(data.published_at), 'MMM d yy', { locale: enUS }),
+    publishedAt: format(parseISO(data.published_at), 'MMM d yy', {
+      locale: enUS,
+    }),
     duration: Number(data.file.duration),
     durationAsString: convertDurationToTimeString(Number(data.file.duration)),
     description: data.description,
     url: data.file.url,
   }
-  
+
   return {
     props: {
       episode,
